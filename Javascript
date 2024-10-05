@@ -1,0 +1,77 @@
+document.getElementById('politicalQuiz').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evitar recargar la página al enviar el formulario
+
+    // Inicializar puntuaciones
+    let scores = {
+        'PPMIN': 0,
+        'UNCM': 0,
+        'PLC': 0,
+        'PSPD': 0,
+        'PUGA': 0,
+        'PLA': 0,
+        'CRSD': 0
+    };
+
+    // Capturar las respuestas
+    let q1 = document.querySelector('input[name="q1"]:checked');
+    let q2 = document.querySelector('input[name="q2"]:checked');
+    let q3 = document.querySelector('input[name="q3"]:checked');
+    let q4 = document.querySelector('input[name="q4"]:checked');
+
+    // Asegurarse de que todas las preguntas estén respondidas
+    if (!q1 || !q2 || !q3 || !q4) {
+        document.getElementById('result').innerHTML = "Por favor, responde todas las preguntas.";
+        return;
+    }
+
+    // Asignar puntos por cada respuesta
+    scores[q1.value] += 1;
+    scores[q2.value] += 1;
+    scores[q3.value] += 1;
+    scores[q4.value] += 1;
+
+    // Calcular el partido con mayor puntuación
+    let highestScore = Math.max(...Object.values(scores));
+    let result = Object.keys(scores).filter(key => scores[key] === highestScore);
+
+    // Mostrar el resultado
+    let partido = '';
+    let explicacion = '';
+    let cercanos = [];
+
+    // Caso en que hay empate entre dos o más partidos
+    if (result.length > 1) {
+        explicacion += `Tus respuestas indican que tu visión política se encuentra entre varios partidos: ${result.join(', ')}. Esto significa que compartes puntos clave con más de un partido.`;
+
+        result.forEach(partido => {
+            explicacion += `<br><strong>${partido}</strong>: `;
+            switch(partido) {
+                case 'PPMIN':
+                    explicacion += "Tu visión sobre la identidad cultural y la intervención estatal fuerte te acercan al Partido Popular Marquista por la Identidad Nacional.";
+                    break;
+                case 'UNCM':
+                    explicacion += "Tienes una visión moderada respecto a la seguridad y el rol del estado, lo que coincide con la Unión Nacional Conservadora Marquista.";
+                    break;
+                case 'PLC':
+                    explicacion += "Tu preferencia por una menor intervención estatal y mayor libertad económica coincide con el Partido Liberal Crigio.";
+                    break;
+                case 'PSPD':
+                    explicacion += "Tu postura de derechos civiles fuertes y un estado activo en la economía coincide con el Partido Socialista Pro-Democracia.";
+                    break;
+                case 'PUGA':
+                    explicacion += "Una visión más autoritaria y de orden estricto encaja con la Plataforma Unida de Grupos Autoritarios.";
+                    break;
+                case 'PLA':
+                    explicacion += "El enfoque hacia la libertad individual sin intervención estatal refleja la visión del Partido de la Libertad Anárquica.";
+                    break;
+                case 'CRSD':
+                    explicacion += "Tu enfoque en el equilibrio entre la justicia social y el respeto por la iniciativa privada coincide con el Centro Reformista Social-Democrático.";
+                    break;
+            }
+        });
+    } else {
+        partido = result[0];
+        explicacion += `El partido más cercano a tus ideas es: <strong>${partido}</strong>.<br>`;
+        switch(partido) {
+            case 'PPMIN':
+                explicacion += "Tu visión sobre la identidad cultural y la intervención estatal fuerte te acercan al
